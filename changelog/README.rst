@@ -6,9 +6,8 @@ experience over the internal implementation detail.
 
 Use full sentences, in the past tense, with proper punctuation, examples::
 
-    Added support for displaying a fairness audit visualization.
+    Added framework supporting evaluation of usecase-specific grader prompt.
 
-    Upgraded event merging to be compatible with pandas v2.
 
 Each file should be named ``<ISSUE>.<TYPE>.rst``, where ``<ISSUE>`` is an issue number, and ``<TYPE>`` is one of
 the five towncrier types: feature, bugfix, doc, removal, or misc.
