@@ -50,6 +50,6 @@ jobs:
       - name: Validate changelog
         run: |
           if ! towncrier check --compare-with origin/${{ github.base_ref }}; then
-          echo "Please add a change fragment; see https://github.com/epic-open-source/evaluation/blob/main/changelog/README.rst for details."
+          echo "Please add a change fragment; see https://github.com/epic-open-source/evaluation-instruments/blob/main/changelog/README.rst for details."
             false
           fi

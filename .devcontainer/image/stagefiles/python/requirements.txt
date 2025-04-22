@@ -1,3 +1,4 @@
-seismometer
-litellm==1.65.4
-pre-commit
+#seismometer
+#litellm==1.65.4
+jupyterlab==4.4.1
+pre-commit==4.2.0

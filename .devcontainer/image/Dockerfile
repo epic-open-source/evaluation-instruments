@@ -13,7 +13,7 @@ RUN pip install --no-cache-dir -r /env/python/requirements.txt
 LABEL \
     org.opencontainers.image.vendor="Epic" \
     org.opencontainers.image.title="Seismometer" \
-    org.opencontainers.image.description="Development container for AI Trust & Assurance Toolset: Evaluation"
+    org.opencontainers.image.description="Development container for AI Trust & Assurance Suite: Evaluation Instruments"
 
 WORKDIR /home/seismo/workspace
 CMD /bin/bash

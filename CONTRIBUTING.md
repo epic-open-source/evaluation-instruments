@@ -3,7 +3,7 @@
 Contributing to Evaluation
 ===========================
 
-Contributing to ``evaluation`` is similar to
+Contributing to ``evaluation-instruments`` is similar to
 other open-source repositories.
 
 -  Small bug fixes can be validated with automated testing and accepted
@@ -13,7 +13,7 @@ other open-source repositories.
    knowledge, which allows you to contribute new guidelines and processes
    for model validation.
 
--  Substantial changes to ``evaluation`` follow the `RFC Process`_ of Seismometer.
+-  Substantial changes to ``evaluation-instruments`` follow the `RFC Process`_ of Seismometer.
 
 Contributors must agree to our contributor license agreement, and your
 request will undergo internal review to determine if the request is
