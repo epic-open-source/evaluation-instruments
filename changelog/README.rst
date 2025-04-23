@@ -1,20 +1,34 @@
-This directory contains changelog `fragments`; small per-fix or per-PR files **ReST**-formatted text that will
-be added to ``CHANGES.rst`` by `towncrier <https://towncrier.readthedocs.io/en/latest/>`_.
+This directory contains changelog `fragments`` — small .rst (reStructuredText) files describing individual pull requests or fixes. These are compiled into ``CHANGES.rst`` by `towncrier <https://towncrier.readthedocs.io/en/latest/>`_.
 
-The result is a documentation page meant for **users**. With this focus in mind, describe the change in the user
-experience over the internal implementation detail.
+The resulting changelog is meant for **users**. Focus your entry on what changed from a user's point of view, rather than internal implementation details.
 
-Use full sentences, in the past tense, with proper punctuation, examples::
+Use full sentences, in the past tense, with proper punctuation. For example::
 
     Added framework supporting evaluation of usecase-specific grader prompt.
 
+File Naming
+===========
 
-Each file should be named ``<ISSUE>.<TYPE>.rst``, where ``<ISSUE>`` is an issue number, and ``<TYPE>`` is one of
-the five towncrier types: feature, bugfix, doc, removal, or misc.
+Each file should be named using the format:
 
-Such as ``1234.bugfix.rst`` or ``2345.doc.rst``
+<ISSUE_OR_PR_NUMBER>.<TYPE>.rst
+Where <TYPE> is one of:
 
-If a pull request fixes an issue, use that number in its file name. If there is no issue, then use the pull
-request instead.
+feature — New user-facing functionality
+bugfix — Fixes a defect or broken behavior
+doc — Documentation-only change
+removal — Deprecation or removal of a feature
+misc — Internal or minor change not visible to users
 
-If your change does not deserve a changelog entry, apply the `skip changelog` GitHub label to your pull request.
+
+Examples:
+
+1234.bugfix.rst
+2345.feature.rst
+
+If your change fixes an issue, use the issue number in the filename. Otherwise, use the pull request number.
+Place the file in the changelog/ directory.
+
+When Not to Add a Fragment
+==========================
+If your change doesn't merit a changelog entry (e.g., minor refactor, test-only update), apply the skip changelog label to your pull request.

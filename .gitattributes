@@ -9,9 +9,6 @@
 *.sh text eol=lf
 .bashrc text eol=lf
 
-# Declare files that will always have CRLF line endings on checkout.
-#*.sln text eol=crlf
-
 # Track common data file types with Git LFS
 *.[Tt][Ss][Vv] filter=lfs diff=lfs merge=lfs
 *.[Cc][Ss][Vv] filter=lfs diff=lfs merge=lfs
@@ -19,4 +16,4 @@
 # Track common model file types with Git LFS
 *.[Pp][Tt][Hh] filter=lfs diff=lfs merge=lfs -text
 *.[Pp][Ii][Cc][Kk][Ll][Ee] filter=lfs diff=lfs merge=lfs -text
- *.[Hh]5 filter=lfs diff=lfs merge=lfs -text
+*.[Hh]5 filter=lfs diff=lfs merge=lfs -text

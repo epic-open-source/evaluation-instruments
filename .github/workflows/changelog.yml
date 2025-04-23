@@ -5,6 +5,7 @@ on:
 
 permissions:
   pull-requests: read
+  contents: read
 
 jobs:
   # Check for label in its own job to allow skipping multiple steps with 'success'

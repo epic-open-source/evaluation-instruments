@@ -4,3 +4,4 @@
 .github/CODEOWNERS            @epic-open-source/ai-trust-and-assurance-core
 pyproject.toml                @epic-open-source/ai-trust-and-assurance-core
 setup.cfg                     @epic-open-source/ai-trust-and-assurance-core
+setup.py                     @epic-open-source/ai-trust-and-assurance-core
