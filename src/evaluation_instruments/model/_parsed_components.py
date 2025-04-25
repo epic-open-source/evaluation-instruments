@@ -1,27 +1,44 @@
 from dataclasses import dataclass
 from typing import Optional
 
-@dataclass
+
+@dataclass(init=False)
 class TokenUsage:
     prompt_tokens: Optional[int] = None
     completion_tokens: Optional[int] = None
     total_tokens: Optional[int] = None
 
+    def __init__(
+        self,
+        prompt_tokens: Optional[int] = None,
+        completion_tokens: Optional[int] = None,
+        total_tokens: Optional[int] = None,
+        **kwargs,
+    ):
+        self.prompt_tokens = prompt_tokens
+        self.completion_tokens = completion_tokens
+        self.total_tokens = total_tokens
+        if self.total_tokens is None and (self.prompt_tokens is not None or self.completion_tokens is not None):
+            self.total_tokens = (self.prompt_tokens or 0) + (self.completion_tokens or 0)
+
+        if kwargs:
+            self.other = kwargs
+
     def __str__(self):
         return f"Total Tokens={self.total_tokens}"
 
     def __repr__(self):
-        return f"TokenUsage(prompt_tokens={self.prompt_tokens}, completion_tokens={self.completion_tokens}, total_tokens={self.total_tokens})"
-
-
-    def __post_init__(self):
-        if self.total_tokens is None and self.prompt_tokens is not None and self.completion_tokens is not None:
-            self.total_tokens = self.prompt_tokens + self.completion_tokens
+        return (
+            f"TokenUsage(prompt_tokens={self.prompt_tokens}, "
+            f"completion_tokens={self.completion_tokens}, "
+            f"total_tokens={self.total_tokens})"
+        )
 
     def __add__(self, other):
         self.validate_compatible(other)
 
         new_obj = TokenUsage()
+
         for attr in self.__dataclass_fields__:
             new_value = None
             if getattr(self, attr) is not None or getattr(other, attr) is not None:
@@ -40,9 +57,9 @@ class TokenUsage:
         self.validate_compatible(other)
 
         return (
-            (True if self.prompt_tokens is None else self.prompt_tokens == other.prompt_tokens) and
-            (True if self.completion_tokens is None else self.completion_tokens == other.completion_tokens) and
-            (True if self.total_tokens is None else self.total_tokens == other.total_tokens)
+            (True if self.prompt_tokens is None else self.prompt_tokens == other.prompt_tokens)
+            and (True if self.completion_tokens is None else self.completion_tokens == other.completion_tokens)
+            and (True if self.total_tokens is None else self.total_tokens == other.total_tokens)
         )
 
     def __gt__(self, other):
@@ -70,7 +87,7 @@ class TokenUsage:
     def __lt__(self, other):
         self.validate_compatible(other)
 
-        any_larger = (self == other)
+        any_larger = self == other  # equal is not strictly less than
         for attr in self.__dataclass_fields__:
             self_value = getattr(self, attr)
             other_value = getattr(other, attr)

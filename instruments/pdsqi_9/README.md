@@ -1,1 +1,1 @@
-The Provider Documentation Summarization Quality Instrument (PDSQI-9) was developed to evaluate LLM-generated clinical summaries of multiple notes with a target specialty. Its development is outlined here. 
+The Provider Documentation Summarization Quality Instrument (PDSQI-9) was developed to evaluate LLM-generated clinical summaries of multiple notes with a target specialty. Its development is outlined [here](https://arxiv.org/abs/2501.08977).

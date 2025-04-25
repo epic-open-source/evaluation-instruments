@@ -4,5 +4,47 @@ This repository contains a collection of evaluation instruments with a focus on 
 
 The instruments provide a consistent interface for inputs and outputs to aid in reuse between use cases, composition into pipelines, and integration with [seismometer](https://epic-open-source.github.io/seismometer/) for analysis. If an instrument requires an LLM, the [litellm SDK](https://docs.litellm.ai/) API protocol is encouraged to streamline usage across language models. 
 
-## PDSQI-9
-The [PDSQI-9 notebook](https://github.com/epic-open-source/evaluation-instruments/blob/main/instruments/pdsqi_9/PDSQI_annotated.ipynb) demonstrates how to use the evaluation instument on a set of notes and their pre-generated summaries.  Note that use of the instrument is under a [separate license](https://github.com/epic-open-source/evaluation-instruments/blob/main/instruments/pdsqi_9/LICENSE.txt) and of course give credit to the authors using the provided [citation details](https://github.com/epic-open-source/evaluation-instruments/blob/main/instruments/pdsqi_9/CITATION.cff).
+## How to use
+
+This package is not currently published to PyPI, so it must be installed from source. It also does not provide direct support for interfacing with generative models, as this is an implicit requirement for generating the outputs needing evaluation.
+
+### Installation
+
+Clone this repository into a directory accessible to your Python environment, then run:
+
+```bash
+pip install .
+```
+
+### Getting Started
+
+Navigate to the instrument of your choice, such as the [PDSQI-9 notebook](https://github.com/epic-open-source/evaluation-instruments/blob/main/instruments/pdsqi_9/PDSQI_annotated.ipynb).
+
+Using an instrument typically involves two steps:
+
+1. **Configure your backing model** - The package follows the [LiteLLM](https://docs.litellm.ai/) protocol for model integration. You'll need a function that accepts a messages array and returns an OpenAI-style JSON response. Using LiteLLM directly can simplify this to setting a few environment variables.
+
+2. **Align your data** - The examples use a pattern where content for evaluation is stored in separate files to minimize memory usage. A DataFrame is built to store paths to these files. File contents are instrument and use-case dependent:
+    - For PDSQI-9, each file contains:
+      - `summary`: The text string being evaluated
+      - `notes`: A list of text representing the raw information being summarized
+      - `target_specialty`: The specialty of the target user
+
+### Running Evaluations
+
+When running evaluations, you can set a `max_tokens` threshold to stop after the first request exceeding that limit. For finer-grained control, consider using your model provider's token consumption monitoring and limiting features.
+This is not currently published to pypi so must be installed from source, and does not provide direct support for reaching out to generative models.  If you have a model output to evaluate chances are good you already have a method to generate that output, so the goal here is to make something light that can fit into that ecosystem.
+
+#### Evaluation Flow
+ 
+The evaluation process follows a three-step pipeline for each row of input data, initiated by Evaluator.run_dataset:
+ 
+1. `prompt = prep_fn(row)` – generates a message array from the input
+2. `raw_output = completion_fn(model, prompt)` – gets model response
+3. `parsed, usage = post_process_fn(raw_output)` – parses the model output
+ 
+```text
+DataFrame --> prep_fn --> completion_fn --> post_process_fn --> parsed results
+```
+ 
+> Tip: If `log_enabled` is set, all raw outputs are saved to disk with timestamps under `evaluation_logs/`.
