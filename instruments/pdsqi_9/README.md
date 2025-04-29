@@ -11,8 +11,8 @@ This work supports scalable evaluation of generative AI tools integrated into cl
 ## 🛠 Features
 
 - **PDSQI-9** is a validated rubric for evaluating medical summaries
-- Uses LLM-as-a-Judge prompts to assign structured scores on a 1-5 Likert scale with explanations
-- Handles multiple note inputs from a series of patient encounters
+- It uses LLM-as-a-Judge prompts to assign structured scores on a 1-5 Likert scale with explanations
+- It handles multiple note inputs from a series of patient encounters
 - JSON-based input and output
 
 ---
