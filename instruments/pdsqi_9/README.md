@@ -10,9 +10,9 @@ This work supports scalable evaluation of generative AI tools integrated into cl
 
 ## 🛠 Features
 
-- Validated **PDSQI-9** rubric for evaluating medical summaries
-- Prompts an LLM-as-a-Judge to assign structured scores on a 1-5 Likert scale with explanations
-- Handles multiple note sources with timestamps
+- **PDSQI-9** is a validated rubric for evaluating medical summaries
+- Uses LLM-as-a-Judge prompts to assign structured scores on a 1-5 Likert scale with explanations
+- Handles multiple note inputs from a series of patient encounters
 - JSON-based input and output
 
 ---
@@ -20,6 +20,12 @@ This work supports scalable evaluation of generative AI tools integrated into cl
 ## 📂 How It Works
 
 The script constructs a system prompt and user prompt using the provided clinical notes and summary, then evaluates the summary against the full **PDSQI-9** rubric. Outputs are returned in JSON with free-text justifications and scores for each attribute.
+
+### Expected Inputs
+- notes: dict[int, str] - a dictionary with note text as string values. Keys are used as identifiers in summary citations
+- summary: str - the summary being evaluated. Citations are expected to be in ```<Note ID:int>``` format and correspond to items in the notes input
+- target_specialty: str - the target specialty for the summary as a string. For example, "Family Medicine" or "Cardiology"
+
 
 ### Evaluation Attributes
 
