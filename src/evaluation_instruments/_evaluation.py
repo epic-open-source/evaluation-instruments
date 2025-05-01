@@ -139,7 +139,7 @@ class Evaluation:
             prompt = self.prep_fn(sample)
 
             # Delegate
-            raw_output = self.completion_fn(model, prompt, **self._model_args)
+            raw_output = self.completion_fn(model=model, messages=prompt, **self._model_args)
 
             response, usage = self._post_fn(sample_ix, raw_output)
             accumulated_usage += TokenUsage(**usage)
