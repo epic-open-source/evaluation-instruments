@@ -66,7 +66,9 @@ class Evaluation:
 
         self.log_enabled = log_enabled
         self._model_args = model_args or {}
-        self.capacity = TokenUsage(None, None, max_tokens)
+
+        self.tmp_dir: Optional[Path] = None
+        self.capacity: TokenUsage = TokenUsage(None, None, max_tokens)
 
         logger.debug(f"Set up with {log_enabled=} and capacity {max_tokens}")
 
@@ -142,9 +144,7 @@ class Evaluation:
             response, usage = self._post_fn(sample_ix, raw_output)
             accumulated_usage += TokenUsage(**usage)
 
-            tmp_dir = self._dump_to_temp(sample_ix=sample_ix, raw_content=raw_output)
             outputs[sample_ix] = response
-
             logger.debug(f"{sample_ix}-Completed evaluation")
 
             # abort if beyond capacity
@@ -152,7 +152,7 @@ class Evaluation:
                 logger.warning(f"Aborting run after {sample_ix}. Capacity exceeded: {accumulated_usage} > {max_usage}")
                 break
 
-        if tmp_dir is not None:
+        if self.tmp_dir is not None:
             logger.info(f"Dumped raw content to {tmp_dir}")
 
         return outputs, accumulated_usage
@@ -178,20 +178,21 @@ class Evaluation:
             return None
 
         datestamp = datetime.now().strftime("%Y%m%d-%Hh")  # Generate a timestamp in the format YYYYMMDD-hhmm
-        tmp_dir = Path(tempfile.gettempdir()) / "evaluation_logs" / f"{datestamp}"
-        tmp_dir.mkdir(parents=True, exist_ok=True)
+
+        if self.tmp_dir is None:
+            tmp_dir = Path(tempfile.gettempdir()) / "evaluation_logs" / f"{datestamp}"
+            tmp_dir.mkdir(parents=True, exist_ok=True)
+            self.tmp_dir = tmp_dir
 
         timestamp = datetime.now().strftime("%H%M%S")  # Generate a timestamp in the format hhmmss
-        filepath = tmp_dir / f"{sample_ix}_raw_{timestamp}.json"
+        filepath = self.tmp_dir / f"{sample_ix}_raw_{timestamp}.json"
 
         with open(filepath, "w") as f:
             # Write the raw content to the file
             if isinstance(raw_content, dict):
                 json.dump(raw_content, f)
             else:
-                f.write(raw_content)
-
-        return tmp_dir
+                f.write(str(raw_content))
 
     def post_process_default(self, sample_ix, openai_json: dict) -> tuple[dict, TokenUsage]:
         """
@@ -214,9 +215,13 @@ class Evaluation:
             as well as the usage information from response['usage'].
         """
         ix = 0  # assume N=1
+        try: #  Many providers have their own response objects, try to convert
+            openai_json = openai_json.dict()
+        except AttributeError:
+            pass
+
         try:
             raw_content = openai_json["choices"][ix]["message"]["content"]
-
             # Assume no nesting {}
             response = json.loads(raw_content[raw_content.find("{") : raw_content.find("}") + 1])  # noqa: E203
         except Exception:
@@ -224,6 +229,8 @@ class Evaluation:
             response = {}
 
         usage = openai_json.get("usage", {"completion_tokens": 0, "prompt_tokens": 0, "total_tokens": 0})
+
+        self._dump_to_temp(sample_ix=sample_ix, raw_content=openai_json)
         return response, usage
 
 
