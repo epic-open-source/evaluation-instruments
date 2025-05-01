@@ -216,9 +216,12 @@ class Evaluation:
         """
         ix = 0  # assume N=1
         try: #  Many providers have their own response objects, try to convert
-            openai_json = openai_json.dict()
+            openai_json = openai_json.json()
         except AttributeError:
             pass
+
+        if isinstance(openai_json, str):
+            openai_json = json.loads(openai_json)
 
         try:
             raw_content = openai_json["choices"][ix]["message"]["content"]
