@@ -7,24 +7,54 @@ import pytest
 from evaluation_instruments._evaluation import Evaluation
 from evaluation_instruments.model import TokenUsage
 
-
-def fake_completion(prompt, **kwargs):
-    """Fake completion function to simulate OpenAI API response."""
+def example_dict():
     return {
-        "choices": [{"message": {"content": json.dumps({"result": "success"})}}],
-        "usage": {"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15},
-    }
+            "choices": [{"message": {"content": json.dumps({"result": "success"})}}],
+            "usage": {"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15},
+        }
 
+class CompletionObj:
+    def __init__(self, response_dict):
+        self.response_dict = response_dict
+
+    def dict(self):
+        return self.response_dict
+
+    def json(self):
+        return json.dumps(self.response_dict)
+
+@pytest.fixture
+def sample_evaluation_obj():
+    """
+    Create a basic evaluation instance with mock functions
+    Returns an object with a dict method, like Openai
+    """
+    prep_fn = MagicMock(return_value="test prompt")
+    completion_fn = MagicMock(
+        return_value=CompletionObj(example_dict())
+    )
+    post_fn = MagicMock(
+        return_value=({"result": "success"}, {"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15})
+    )
+
+    return Evaluation(
+        prep_fn=prep_fn,
+        completion_fn=completion_fn,
+        post_process_fn=post_fn,
+        log_enabled=False,
+        model_args={},
+        max_tokens=1000,
+    )
 
 @pytest.fixture
 def sample_evaluation():
-    """Create a basic evaluation instance with mock functions."""
+    """
+    Create a basic evaluation instance with mock functions.
+    Directly returns a dictionary
+    """
     prep_fn = MagicMock(return_value="test prompt")
     completion_fn = MagicMock(
-        return_value={
-            "choices": [{"message": {"content": '{"result": "success"}'}}],
-            "usage": {"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15},
-        }
+        return_value=example_dict()
     )
     post_fn = MagicMock(
         return_value=({"result": "success"}, {"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15})
@@ -42,10 +72,7 @@ def sample_evaluation():
 
 def static_completion(prompt, **kwargs):
     """Fake completion function to simulate OpenAI API response."""
-    return {
-        "choices": [{"message": {"content": json.dumps({"result": "success"})}}],
-        "usage": {"prompt_tokens": 10, "completion_tokens": 5, "total_tokens": 15},
-    }
+    return example_dict()
 
 
 def static_prep(sample):
@@ -115,7 +142,7 @@ class TestEvaluation:
         assert result == (not initial_state)
 
     def test_run_dataset(self, sample_evaluation):
-        """Test the run_dataset method processes samples correctly."""
+        """Test that run_object returns the expected output."""
         # Create a mock DataFrame
         df = pd.DataFrame({"id": [1, 2], "data": ["test1", "test2"]})
 
@@ -126,6 +153,24 @@ class TestEvaluation:
         assert sample_evaluation._prep_fn.call_count == 2
         assert sample_evaluation._completion_fn.call_count == 2
         assert sample_evaluation._post_fn.call_count == 2
+
+        # Check outputs and usage
+        assert len(outputs) == 2
+        assert all(v == {"result": "success"} for v in outputs.values())
+        assert usage == TokenUsage(20, 10, 30)
+
+    def test_run_dataset(self, sample_evaluation_obj):
+        """Test that run_object returns the expected output."""
+        # Create a mock DataFrame
+        df = pd.DataFrame({"id": [1, 2], "data": ["test1", "test2"]})
+
+        # Run the dataset
+        outputs, usage = sample_evaluation_obj.run_dataset(df)
+
+        # Check that prep_fn, completion_fn, and post_fn were called for each sample
+        assert sample_evaluation_obj._prep_fn.call_count == 2
+        assert sample_evaluation_obj._completion_fn.call_count == 2
+        assert sample_evaluation_obj._post_fn.call_count == 2
 
         # Check outputs and usage
         assert len(outputs) == 2

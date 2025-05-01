@@ -89,3 +89,27 @@ def test_frame_from_evals_single_item():
 
     # Verify exact match with expected DataFrame
     assert_frame_equal(result_df, expected_df)
+
+def test_frame_from_evals_single_score_multiple_items():
+    """Test frame_from_evals with multiple items but only single score values (no evidence)."""
+    # Sample with single score per criteria, multiple items
+    eval_output = {
+        "sample1": {
+            "criteria1": 4,
+            "criteria2": 3,
+        },
+        "sample2": {
+            "criteria1": 5,
+            "criteria2": 2,
+        },
+    }
+    expected_df = pd.DataFrame(
+        {"criteria1": [4, 5], "criteria2": [3, 2]},
+        index=["sample1", "sample2"]
+    )
+
+    # Act
+    result_df = frame_from_evals(eval_output, [])
+
+    # Verify exact match with expected DataFrame
+    assert_frame_equal(result_df, expected_df)
