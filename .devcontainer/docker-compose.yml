@@ -11,6 +11,9 @@ services:
       # Update this to wherever you want VS Code to mount the folder of your project
       - ..:/home/seismo/workspace
 
+      # Mount certificates read-only
+      - /usr/local/share/ca-certificates:/usr/local/share/ca-certificates:ro
+
       # [From Extension] Forwards the local Docker socket to the container.
       - /var/run/docker.sock:/var/run/docker.sock
 
