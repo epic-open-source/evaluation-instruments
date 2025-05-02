@@ -1,8 +1,8 @@
 import json
 import logging
-import os
 from functools import wraps
 from typing import Callable, Optional
+from pathlib import Path
 
 logger = logging.getLogger("evaluation")
 
@@ -38,14 +38,18 @@ def json_from_column(prompt_fn: Callable = None, namedtuple_key: str = None, dat
             """
 
             # Get the file path from the namedtuple using the key
-            filename = getattr(sample, namedtuple_key) + ".json"
-            if data_path:
-                filename = os.path.join(data_path, filename)
+            filename = Path(getattr(sample, namedtuple_key))
+            if not filename:
+                return fn(filename)
 
-            if not filename or not os.path.isfile(filename):
+            filename = filename.with_suffix(".json")
+            if data_path:
+                filename = Path(data_path) / filename
+
+            if not filename.is_file():
                 raw_json = {}
             else:  # Open the file and read its contents
-                with open(filename, "r") as file:
+                with filename.open("r") as file:
                     raw_json = json.load(file)
 
             # Call the original function with the file contents

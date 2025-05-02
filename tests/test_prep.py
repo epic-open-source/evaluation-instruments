@@ -1,6 +1,7 @@
 import json
 from collections import namedtuple
 from unittest.mock import mock_open, patch
+from pathlib import PureWindowsPath, PurePosixPath
 
 import pytest
 
@@ -10,63 +11,48 @@ import evaluation_instruments.prep as undertest
 class TestJsonFromColumnDecorator:
     """Tests for the json_from_column decorator functionality."""
 
-    def test_basic_functionality(self):
-        """Test basic json_from_column decorator functionality."""
-
-        # Create a test function to decorate
-        @undertest.json_from_column(namedtuple_key="file_id")
-        def test_fn(json_data):
-            return json_data
-
-        # Create a mock sample with file_id
-        Sample = namedtuple("Sample", ["file_id"])
-        sample = Sample(file_id="test_id")
-
-        # Mock the open function to return a specific JSON
-        test_json = {"key": "value"}
-        m = mock_open(read_data=json.dumps(test_json))
-
-        with patch("builtins.open", m), patch("os.path.isfile", return_value=True):
-            result = test_fn(sample)
-            assert result == test_json
-            m.assert_called_once_with("test_id.json", "r")
-
-    def test_with_data_path(self):
+    @pytest.mark.parametrize("data_path",[
+                             "data",
+                             "subdir/data",
+                             "subdir\\data",
+                             PurePosixPath("subdir/data"),
+                             PureWindowsPath("subdir\\data"),
+                              ])
+    def test_with_data_path(self, data_path, tmp_path):
         """Test json_from_column with a data_path."""
-
-        # Create a test function with data path
-        @undertest.json_from_column(namedtuple_key="file_id", data_path="/data")
-        def test_fn(json_data):
-            return json_data
+        expected_data = {"testkey": "value"}
+        expected_file = (tmp_path / data_path).with_suffix(".json")
+        (expected_file.parent).mkdir(parents=True, exist_ok=True)
+        with expected_file.open("w") as f:
+            f.write(json.dumps(expected_data))
 
         # Create a mock sample
         Sample = namedtuple("Sample", ["file_id"])
-        sample = Sample(file_id="test_id")
+        sample = Sample(file_id=data_path)
 
-        # Mock the open function
-        test_json = {"key": "value"}
-        m = mock_open(read_data=json.dumps(test_json))
 
-        with patch("builtins.open", m), patch("os.path.isfile", return_value=True), patch(
-            "os.path.join", return_value="/data/test_id.json"
-        ):
-            result = test_fn(sample)
-            assert result == test_json
-            m.assert_called_once_with("/data/test_id.json", "r")
+        # Act
+        # Create a test function with data path
+        @undertest.json_from_column(namedtuple_key="file_id", data_path=tmp_path)
+        def test_fn(json_data):
+            return json_data
+        result = test_fn(sample)
+
+        # Assert
+        assert result == {"testkey": "value"}
 
     def test_file_not_found(self):
         """Test json_from_column when the file is not found."""
 
-        @undertest.json_from_column(namedtuple_key="file_id")
+        @undertest.json_from_column(namedtuple_key="file_id", data_path="nonexistent_path")
         def test_fn(json_data):
             return json_data
 
         Sample = namedtuple("Sample", ["file_id"])
         sample = Sample(file_id="nonexistent_id")
 
-        with patch("os.path.isfile", return_value=False):
-            result = test_fn(sample)
-            assert result == {}
+        result = test_fn(sample)
+        assert result == {}
 
     def test_missing_key(self):
         """Test json_from_column raises ValueError if namedtuple_key is not provided."""
