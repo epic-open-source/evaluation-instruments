@@ -72,14 +72,14 @@ If you use the PDSQI-9 instrument or its integration as an LLM-as-a-Judge for sc
 ### For the PDSQI-9 paper:
 
 ```bibtex
- @article{Croxford_Gao_Pellegrino_Wong_Wills_First_Schnier_Burton_Ebby_Gorski_et al._2025,
+ @article{Croxford_Gao_Pellegrino_Wong_Wills_First_Schnier_Burton_Ebby_Gorski_et_al._2025,
 	author={Croxford, Emma and Gao, Yanjun and Pellegrino, Nicholas and Wong, Karen and Wills, Graham and First, Elliot and Schnier, Miranda and Burton, Kyle and Ebby, Cris and Gorski, Jillian and Kalscheur, Matthew and Khalil, Samy and Pisani, Marie and Rubeor, Tyler and Stetson, Peter and Liao, Frank and Goswami, Cherodeep and Patterson, Brian and Afshar, Majid},
 	title={Development and validation of the provider documentation summarization quality instrument for large language models},
 	ISSN={1527-974X},
 	DOI={10.1093/jamia/ocaf068},
 	journal={Journal of the American Medical Informatics Association},
 	year={2025},
-	month=may,
+	month={may},
 	pages={ocaf068}
 }
 
