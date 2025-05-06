@@ -55,9 +55,9 @@ See the full, validated instrument here:
   *Current and Future State of Evaluation of Large Language for Medical Summarization Tasks*  
   https://www.nature.com/articles/s44401-024-00011-2
 
-- **arXiv (2024):**  
+- **Journal of the American Medical Informatics Association (JAMIA) (2025):**  
   *Development and Validation of the Provider Documentation Summarization Quality Instrument for Large Language Models (PDSQI-9)*  
-  https://arxiv.org/abs/2501.08977
+  https://doi.org/10.1093/jamia/ocaf068
 
 - **medRxiv (2025):**  
   *Automating Evaluation of AI Text Generation in Healthcare with a Large Language Model (LLM)-as-a-Judge*  
@@ -72,14 +72,17 @@ If you use the PDSQI-9 instrument or its integration as an LLM-as-a-Judge for sc
 ### For the PDSQI-9 paper:
 
 ```bibtex
-@article{croxford2025developmentvalidationproviderdocumentation,
-      title={Development and Validation of the Provider Documentation Summarization Quality Instrument for Large Language Models}, 
-      author={Emma Croxford and Yanjun Gao and Nicholas Pellegrino and Karen K. Wong and Graham Wills and Elliot First and Miranda Schnier and Kyle Burton and Cris G. Ebby and Jillian Gorskic and Matthew Kalscheur and Samy Khalil and Marie Pisani and Tyler Rubeor and Peter Stetson and Frank Liao and Cherodeep Goswami and Brian Patterson and Majid Afshar},
-      year={2025},
-      eprint={2501.08977},
-      archivePrefix={arXiv},
-      url={https://arxiv.org/abs/2501.08977}, 
+ @article{Croxford_Gao_Pellegrino_Wong_Wills_First_Schnier_Burton_Ebby_Gorski_et al._2025,
+	author={Croxford, Emma and Gao, Yanjun and Pellegrino, Nicholas and Wong, Karen and Wills, Graham and First, Elliot and Schnier, Miranda and Burton, Kyle and Ebby, Cris and Gorski, Jillian and Kalscheur, Matthew and Khalil, Samy and Pisani, Marie and Rubeor, Tyler and Stetson, Peter and Liao, Frank and Goswami, Cherodeep and Patterson, Brian and Afshar, Majid},
+	title={Development and validation of the provider documentation summarization quality instrument for large language models},
+	ISSN={1527-974X},
+	DOI={10.1093/jamia/ocaf068},
+	journal={Journal of the American Medical Informatics Association},
+	year={2025},
+	month=may,
+	pages={ocaf068}
 }
+
 ```
 
 ### For the medical LLM-as-a-Judge paper:
