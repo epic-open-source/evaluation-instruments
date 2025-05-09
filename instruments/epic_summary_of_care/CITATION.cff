@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+title: Rubric
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - name: Epic Systems Corporation
+url: 'https://github.com/epic-open-source/evaluation-instruments'
