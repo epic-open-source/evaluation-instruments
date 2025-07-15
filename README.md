@@ -10,11 +10,27 @@ This package is not currently published to PyPI, so it must be installed from so
 
 ### Installation
 
-Clone this repository into a directory accessible to your Python environment, then run:
+This package is not currently published to PyPI, but it can be installed directly from GitHub using `pip`. This is the recommended approach for programmatic use (e.g., from scripts or services):
+
+```bash
+pip install git+https://github.com/epic-open-source/evaluation-instruments.git
+```
+
+This installs the package along with evaluation instruments — rubrics, prompts, and supporting logic — used to assess AI-generated outputs in specific clinical contexts. Instruments are included for completeness but are not required for all workflows or runtime use.
+
+Alternatively, you can clone the repository into a directory accessible to your Python environment,
+
+```bash
+git clone https://github.com/epic-open-source/evaluation-instruments.git
+```
+
+and then run:
 
 ```bash
 pip install .
 ```
+
+This is useful if you want to inspect or modify the instrument definitions before installation.
 
 ### Getting Started
 
