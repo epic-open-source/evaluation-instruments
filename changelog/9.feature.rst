@@ -1,0 +1,1 @@
+Adding a ``MANIFEST.in`` to ensure the entire ``instruments/`` folder is included in pip-installed distributions.
