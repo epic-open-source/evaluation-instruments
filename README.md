@@ -30,8 +30,6 @@ and then run:
 pip install .
 ```
 
-This is useful if you want to inspect or modify the instrument definitions before installation.
-
 ### Getting Started
 
 Navigate to the instrument of your choice, such as the [PDSQI-9](https://github.com/epic-open-source/evaluation-instruments/blob/main/instruments/pdsqi_9/README.md).
