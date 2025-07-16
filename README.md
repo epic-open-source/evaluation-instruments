@@ -23,7 +23,7 @@ This installs the package along with evaluation instruments — rubrics, prompts
 Alternatively, you can clone the repository into a directory accessible to your Python environment,
 
 ```bash
-git clone https://github.com/epic-open-source/evaluation-instruments.git@vX.Y.Z
+git clone https://github.com/epic-open-source/evaluation-instruments.git
 ```
 
 and then run:
