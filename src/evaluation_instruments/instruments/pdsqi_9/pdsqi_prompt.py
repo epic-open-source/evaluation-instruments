@@ -174,7 +174,7 @@ You are a summarization quality expert that specializes in text analysis and rea
 """
 # fmt: on
 import json
-
+import logging
 
 def pdsqi_from_file(sample: "namedtuple") -> list[dict]:
     """
@@ -201,6 +201,7 @@ def pdsqi_from_file(sample: "namedtuple") -> list[dict]:
 def _resolve_instructions(return_explanation: bool) -> str:
     instructions = INSTRUCTION_LIST.copy()
     if return_explanation:
+        logging.info("Returning of explanation changes the instruction of the prompt from what was published.")
         for ix, instr in DETAIL_INSTRUCTIONS.items():
             instructions[ix] = instr
     return "\n".join([instr for instr in instructions if instr])
