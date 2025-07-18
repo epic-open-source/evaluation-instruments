@@ -178,20 +178,12 @@ You are a summarization quality expert that specializes in text analysis and rea
 """
 # fmt: on
 import json
-import logging
-from enum import Enum
 from typing import Any
+import evaluation_instruments.prep as prep
 
+OUTPUT_MODE = "score_only"  # Default output mode
 
-class OutputMode(Enum):
-    """Defines the output mode for PDSQI-9 evaluation."""
-    DEFAULT = "default"  # Use the global RETURN_EXPLANATION setting
-    SCORE = "score_only"  # Return only numeric scores
-    EXPLAINED_SCORE = "with_explanation"  # Return scores with explanations
-
-OUTPUT_MODE = OutputMode.SCORE
-
-def pdsqi_from_file(sample: Any, output_mode: OutputMode = OutputMode.DEFAULT) -> list[dict]:
+def pdsqi_from_file(sample: Any, output_mode: str = 'default') -> list[dict]:
     """
     Main function to resolve a prompt for PDSQI-9 evaluation from an entity-specific file.
     The file must be a JSON with keys:
@@ -221,29 +213,7 @@ def pdsqi_from_file(sample: Any, output_mode: OutputMode = OutputMode.DEFAULT) -
 
     return resolve_prompt(summary, notes, target_specialty, output_mode)
 
-def _resolve_mode(output_mode: OutputMode) -> OutputMode:
-    try: # make sure original value is supported
-        output_mode = OutputMode(output_mode)
-    except ValueError: # fallback to default
-        output_mode = OutputMode.DEFAULT
-
-    # resolve default
-    if output_mode == OutputMode.DEFAULT:
-        output_mode = OutputMode(OUTPUT_MODE)
-
-    return output_mode
-
-def _resolve_instructions(output_mode: OutputMode) -> str:
-    instructions = INSTRUCTION_LIST.copy()
-
-    if OutputMode.EXPLAINED_SCORE == _resolve_mode(output_mode):
-        logging.info("Returning of explanation changes the instruction of the prompt from what was published.")
-        for ix, instr in DETAIL_INSTRUCTIONS.items():
-            instructions[ix] = instr
-
-    return "\n".join([instr for instr in instructions if instr])
-
-def resolve_prompt(summary_to_evaluate: str, notes: list[str], target_specialty: str, output_mode: OutputMode = OutputMode.DEFAULT) -> list[dict]:
+def resolve_prompt(summary_to_evaluate: str, notes: list[str], target_specialty: str, output_mode: 'OutputMode' = 'default') -> list[dict]:
     """
     Resolves the prompt for PDSQI-9 evaluation.
 
@@ -266,14 +236,24 @@ def resolve_prompt(summary_to_evaluate: str, notes: list[str], target_specialty:
     list[dict]
         The message array to send to the generative model
     """
+    instructions = prep.resolve_instructions(
+        instructions=INSTRUCTION_LIST,
+        details_overrides=DETAIL_INSTRUCTIONS,
+        mode=output_mode,
+        default_mode=OUTPUT_MODE,
+    )
+
     prompt_notes = "\n".join(
         f"<NoteID:{i+1}>\n" f"Note: {note}\n" f"<\\NoteID:{i+1}>"
         for i, note in enumerate(notes)
     )
-    instruction_set = _resolve_instructions(output_mode)
+
     prompt = BASE_PROMPT_PATTERN.format(
-        prompt_notes=prompt_notes, summary_to_evaluate=summary_to_evaluate, RUBRIC_SET=RUBRIC_SET, target_specialty=target_specialty,
-        instruction_set=instruction_set
+        prompt_notes=prompt_notes,
+        summary_to_evaluate=summary_to_evaluate,
+        RUBRIC_SET=RUBRIC_SET,
+        target_specialty=target_specialty,
+        instruction_set=instructions
     )
 
     return [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": prompt}]

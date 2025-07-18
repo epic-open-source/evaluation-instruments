@@ -170,3 +170,53 @@ class TestPromptCompilation:
         # Continues with good keys
         assert "Here is the evaluation with context." in result
         assert "Evaluate clarity." in result
+
+
+class TestResolveInstructions:
+    def test_resolve_score_is_base(self):
+        instructions = ["First instruction.", "Second instruction."]
+        overrides = {0: "Updated first instruction.",
+                     1: "Updated second instruction."}
+        expected = "\n".join(instructions)
+
+
+        actual = undertest.resolve_instructions(instructions, overrides, default_mode='score_only')
+
+        assert actual == expected
+
+
+    @pytest.mark.parametrize('overrides,expected', [
+        ({}, "\n".join(["First instruction.", "Second instruction."])),
+        ({0: "Updated first instruction."}, "Updated first instruction.\nSecond instruction."),
+        ({1: "Updated second instruction."}, "First instruction.\nUpdated second instruction."),
+        ({0: "Updated first instruction.", 1: "Updated second instruction."}, "Updated first instruction.\nUpdated second instruction.")
+    ])
+    def test_resolve_explanation_is_merged(self, overrides, expected):
+        instructions = ["First instruction.", "Second instruction."]
+
+        actual = undertest.resolve_instructions(instructions, overrides, default_mode='with_explanation')
+
+        assert actual == expected
+
+
+@pytest.mark.parametrize('default',[
+    ('score_only'), (undertest.OutputMode.SCORE),
+    ('with_explanation'), (undertest.OutputMode.EXPLAINED_SCORE),
+    ('default'), (undertest.OutputMode.DEFAULT)
+])
+class Test_ResolveMode:
+    @pytest.mark.parametrize('mode,expected', [
+        ('score_only', undertest.OutputMode.SCORE),
+        (undertest.OutputMode.SCORE, undertest.OutputMode.SCORE),
+        ('with_explanation', undertest.OutputMode.EXPLAINED_SCORE),
+        (undertest.OutputMode.EXPLAINED_SCORE, undertest.OutputMode.EXPLAINED_SCORE),
+    ])
+    def test_explicit_mode_is_choosen(self, mode, expected, default):
+        """Test that explicit mode is chosen over default."""
+        assert expected == undertest.data_handler._resolve_mode(mode, default)
+
+    def test_default_mode_used_when_string(self, default):
+        assert undertest.OutputMode(default) == undertest.data_handler._resolve_mode('default', default)
+
+    def test_default_mode_used_when_enum(self, default):
+        assert undertest.OutputMode(default) == undertest.data_handler._resolve_mode(undertest.OutputMode.DEFAULT, default)
