@@ -166,10 +166,11 @@ INSTRUCTION_LIST = [
 ]
 
 DETAIL_INSTRUCTIONS = {
-    1: "- Your output must be JSON-formatted, where each key is one of your RUBRIC_SET items (e.g., \"Citation\") and each corresponding value is another dictionary of two key-value pairs: \"explanation\" is a free text explanation of why your chosen GRADE is the correct grade, and \"grade\" is a single integer representing your respective GRADE that best matches the CLINICAL_SUMMARY for the key's metric.",
+    1: "- Your output must be JSON-formatted, where each key is one of your RUBRIC_SET items (e.g., \"Citation\") and each corresponding value is another dictionary of two key-value pairs: \"explanation\" is a free text explanation of why your chosen GRADE is the correct, and \"score\" is a single integer representing your respective GRADE that best matches the CLINICAL_SUMMARY for the key's metric.",
     3: "",
-    6: '- Your output must ba VALID JSON-formatted string as follows:\n\"{"citation": {"explanation": "Your explanation here", "grade": 1}, "accurate": {"explanation": "Your explanation here", "grade": 1}, ...}\"'
+    6: '- Your output must ba VALID JSON-formatted string as follows:\n\"{"citation": {"explanation": "Your explanation here", "score": 1}, "accurate": {"explanation": "Your explanation here", "score": 1}, ...}\"'
 }
+
 
 #first line of the prompt must include <think> when using Deepseek R1
 SYSTEM_PROMPT = """
