@@ -3,8 +3,40 @@ import logging
 from functools import wraps
 from typing import Callable, Optional
 from pathlib import Path
+from enum import Enum
 
 logger = logging.getLogger("evaluation")
+
+class OutputMode(Enum):
+    """Defines the output mode for PDSQI-9 evaluation."""
+    DEFAULT = "default"  # Use the global RETURN_EXPLANATION setting
+    SCORE = "score_only"  # Return only numeric scores
+    EXPLAINED_SCORE = "with_explanation"  # Return scores with explanations
+
+
+def _resolve_mode(mode: OutputMode|str, default_mode: OutputMode|str = 'score_only') -> OutputMode:
+    try: # make sure original value is supported
+        output_mode = OutputMode(mode)
+    except ValueError: # fallback to default
+        output_mode = OutputMode.DEFAULT
+
+    # resolve default
+    if output_mode == OutputMode.DEFAULT:
+        output_mode = OutputMode(default_mode)
+
+    return output_mode
+
+def resolve_instructions(instructions: list,
+                         details_overrides: dict,
+                         mode: OutputMode|str = 'default',
+                         default_mode: OutputMode|str = 'score_only') -> str:
+    instructions = instructions.copy()
+
+    if OutputMode.EXPLAINED_SCORE == _resolve_mode(mode, default_mode):
+        for ix, instr in details_overrides.items():
+            instructions[ix] = instr
+
+    return "\n".join([instr for instr in instructions if instr])
 
 
 def json_from_column(prompt_fn: Callable = None, namedtuple_key: str = None, data_path: Optional[str] = None):
