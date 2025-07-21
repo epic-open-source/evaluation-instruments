@@ -198,6 +198,16 @@ class TestResolveInstructions:
 
         assert actual == expected
 
+    def test_resolve_instructions_removes_blanks(self):
+        instructions = ["First instruction.", "", "Pruned instruction.", None, "   ", "Last instruction."]
+        with_explanation = {2: ""}
+
+        # Whitespace is NOT stripped, only empty strings and None are removed
+        expected = "First instruction.\n   \nLast instruction."
+
+        actual = undertest.resolve_instructions(instructions, with_explanation, default_mode='with_explanation')
+
+        assert actual == expected
 
 @pytest.mark.parametrize('default',[
     ('score_only'), (undertest.OutputMode.SCORE),
