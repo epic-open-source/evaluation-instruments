@@ -213,7 +213,7 @@ def pdsqi_from_file(sample: Any, output_mode: str = 'default') -> list[dict]:
 
     return resolve_prompt(summary, notes, target_specialty, output_mode)
 
-def resolve_prompt(summary_to_evaluate: str, notes: list[str], target_specialty: str, output_mode: 'OutputMode' = 'default') -> list[dict]:
+def resolve_prompt(summary_to_evaluate: str, notes: list[str], target_specialty: str, output_mode: prep.OutputMode|str = 'default') -> list[dict]:
     """
     Resolves the prompt for PDSQI-9 evaluation.
 
@@ -225,11 +225,11 @@ def resolve_prompt(summary_to_evaluate: str, notes: list[str], target_specialty:
         The notes to evaluate
     target_specialty : str
         The target medical specialty
-    output_mode : OutputMode, optional
+    output_mode : OutputMode|str, optional
         Controls the output format:
-        - DEFAULT: Use the global RETURN_EXPLANATION setting
-        - SCORE_ONLY: Return only numeric scores
-        - WITH_EXPLANATION: Return scores with explanations
+        - DEFAULT("default"): Use the global RETURN_EXPLANATION setting
+        - SCORE_ONLY("score_only"): Return only numeric scores
+        - WITH_EXPLANATION("with_explanation"): Return scores with explanations
 
     Returns
     -------
@@ -240,7 +240,7 @@ def resolve_prompt(summary_to_evaluate: str, notes: list[str], target_specialty:
         instructions=INSTRUCTION_LIST,
         details_overrides=DETAIL_INSTRUCTIONS,
         default_mode=OUTPUT_MODE,
-        mode=output_mode,
+        mode=output_mode
     )
 
     prompt_notes = "\n".join(

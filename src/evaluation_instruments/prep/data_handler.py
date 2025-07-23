@@ -30,7 +30,7 @@ def _resolve_mode(mode: OutputMode|str, default_mode: OutputMode|str = 'score_on
 def resolve_instructions(instructions: list,
                          details_overrides: dict,
                          default_mode: OutputMode|str,
-                         mode: OutputMode|str = 'default',
+                         mode: OutputMode|str = 'default'
                          ) -> str:
     """
     Resolves inputs into a single string of instructions.
@@ -49,17 +49,18 @@ def resolve_instructions(instructions: list,
     mode : OutputMode | str, optional
         The output mode to use for resolving instructions, by default 'default'
 
-
     Returns
     -------
     str
         A single concatenated string of instructions, with overrides applied as specified.
     """
-    if OutputMode(default_mode) == OutputMode.DEFAULT:
+    # Validate inputs
+    if OutputMode.DEFAULT == OutputMode(default_mode):
         raise ValueError("default_mode must be set to a specific OutputMode, not 'default'")
 
     instructions = instructions.copy()
 
+    # Apply overrides if the mode is EXPLAINED_SCORE
     if OutputMode.EXPLAINED_SCORE == _resolve_mode(mode, default_mode):
         for ix, instr in details_overrides.items():
             instructions[ix] = instr
