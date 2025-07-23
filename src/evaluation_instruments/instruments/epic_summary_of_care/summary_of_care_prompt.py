@@ -169,7 +169,6 @@ DETAIL_INSTRUCTIONS = {
        "explanation of why your chosen GRADE is the correct grade for the SUMMARY OF INPATIENT CARE, and \"score\" is "
        "your respective GRADE that best matches the SUMMARY OF INPATIENT CARE for the key's metric.",
 }
-OUTPUT_MODE = "with_explanation"
 
 SYSTEM_PROMPT = """
 Here is your new role and persona:
@@ -179,6 +178,7 @@ You are an expert grading machine, for clinical summaries of care.
 import pandas as pd
 
 import evaluation_instruments.prep as prep
+OUTPUT_MODE = prep.OutputMode.EXPLAINED_SCORE
 
 def compile_clinical_data(sample: pd.Series) -> str:
     data = ""
@@ -192,7 +192,7 @@ def compile_clinical_data(sample: pd.Series) -> str:
             data += f"[{id}] = {sample[key][id]}\n"
     return data
 
-def resolve_prompt(sample, mode: str = 'default') -> str:
+def resolve_prompt(sample, mode: prep.OutputMode = prep.OutputMode.DEFAULT) -> str:
     prompt_pattern = prep.prompt_compilation(
         PROMPT, pattern_kwargs={"OUTPUT_TEXT": "SUMMARY OF INPATIENT CARE"}, rubric_library=EPIC_SUMMARY_OF_CARE_RUBRIC
     )

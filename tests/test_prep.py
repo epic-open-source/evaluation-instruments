@@ -6,6 +6,7 @@ from pathlib import PureWindowsPath, PurePosixPath
 import pytest
 
 import evaluation_instruments.prep as undertest
+from evaluation_instruments import OutputMode
 
 
 class TestJsonFromColumnDecorator:
@@ -173,6 +174,10 @@ class TestPromptCompilation:
 
 
 class TestResolveInstructions:
+    def test_resolve_instructions_default_cant_be_default(self):
+        with pytest.raises(ValueError, match="default_mode must"):
+            undertest.resolve_instructions([],{}, default_mode=OutputMode.DEFAULT)
+
     def test_resolve_score_is_base(self):
         instructions = ["First instruction.", "Second instruction."]
         overrides = {0: "Updated first instruction.",
@@ -180,7 +185,7 @@ class TestResolveInstructions:
         expected = "\n".join(instructions)
 
 
-        actual = undertest.resolve_instructions(instructions, overrides, default_mode='score_only')
+        actual = undertest.resolve_instructions(instructions, overrides, default_mode=OutputMode.SCORE)
 
         assert actual == expected
 
@@ -194,7 +199,7 @@ class TestResolveInstructions:
     def test_resolve_explanation_is_merged(self, overrides, expected):
         instructions = ["First instruction.", "Second instruction."]
 
-        actual = undertest.resolve_instructions(instructions, overrides, default_mode='with_explanation')
+        actual = undertest.resolve_instructions(instructions, overrides, default_mode=OutputMode.EXPLAINED_SCORE)
 
         assert actual == expected
 
@@ -205,28 +210,23 @@ class TestResolveInstructions:
         # Whitespace is NOT stripped, only empty strings and None are removed
         expected = "First instruction.\n   \nLast instruction."
 
-        actual = undertest.resolve_instructions(instructions, with_explanation, default_mode='with_explanation')
+        actual = undertest.resolve_instructions(instructions, with_explanation, default_mode=OutputMode.EXPLAINED_SCORE)
 
         assert actual == expected
 
 @pytest.mark.parametrize('default',[
-    ('score_only'), (undertest.OutputMode.SCORE),
-    ('with_explanation'), (undertest.OutputMode.EXPLAINED_SCORE),
-    ('default'), (undertest.OutputMode.DEFAULT)
+    (OutputMode.SCORE),
+    (OutputMode.EXPLAINED_SCORE),
+    (OutputMode.DEFAULT)
 ])
 class Test_ResolveMode:
-    @pytest.mark.parametrize('mode,expected', [
-        ('score_only', undertest.OutputMode.SCORE),
-        (undertest.OutputMode.SCORE, undertest.OutputMode.SCORE),
-        ('with_explanation', undertest.OutputMode.EXPLAINED_SCORE),
-        (undertest.OutputMode.EXPLAINED_SCORE, undertest.OutputMode.EXPLAINED_SCORE),
+    @pytest.mark.parametrize('mode', [
+        (OutputMode.SCORE),
+        (OutputMode.EXPLAINED_SCORE),
     ])
-    def test_explicit_mode_is_choosen(self, mode, expected, default):
+    def test_explicit_mode_is_choosen(self, mode, default):
         """Test that explicit mode is chosen over default."""
-        assert expected == undertest.data_handler._resolve_mode(mode, default)
-
-    def test_default_mode_used_when_string(self, default):
-        assert undertest.OutputMode(default) == undertest.data_handler._resolve_mode('default', default)
+        assert mode == undertest.data_handler._resolve_mode(mode, default)
 
     def test_default_mode_used_when_enum(self, default):
-        assert undertest.OutputMode(default) == undertest.data_handler._resolve_mode(undertest.OutputMode.DEFAULT, default)
+        assert undertest.OutputMode(default) == undertest.data_handler._resolve_mode(OutputMode.DEFAULT, default)

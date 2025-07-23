@@ -180,7 +180,6 @@ DETAIL_INSTRUCTIONS = {
        "explanation of why your chosen GRADE is the correct grade for the CLINICAL BASIS FOR APPEAL, and \"score\" is "
        "your respective GRADE that best matches the CLINICAL BASIS FOR APPEAL for the key's metric.",
 }
-OUTPUT_MODE = "with_explanation"
 
 
 SYSTEM_PROMPT = """
@@ -191,6 +190,7 @@ You are an expert grading machine, for clinical denial appeals.
 import pandas as pd
 
 import evaluation_instruments.prep as prep
+OUTPUT_MODE = prep.OutputMode.EXPLAINED_SCORE
 
 
 def compile_clinical_data(sample: pd.Series) -> str:
@@ -208,7 +208,7 @@ def compile_clinical_data(sample: pd.Series) -> str:
                 data += f"[{id}] = {sample[key][id]}\n"
     return data
 
-def resolve_prompt(sample, mode: str = 'default') -> str:
+def resolve_prompt(sample, mode: prep.OutputMode = prep.OutputMode.DEFAULT) -> str:
     prompt_pattern = prep.prompt_compilation(
         PROMPT, pattern_kwargs={"OUTPUT_TEXT": "CLINICAL BASIS FOR APPEAL"}, rubric_library=EPIC_DRAFT_APPEAL_RUBRIC
     )

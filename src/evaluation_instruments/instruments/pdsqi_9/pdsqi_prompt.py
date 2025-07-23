@@ -178,10 +178,11 @@ You are a summarization quality expert that specializes in text analysis and rea
 """
 # fmt: on
 import json
+import logging
 from typing import Any
-import evaluation_instruments.prep as prep
+from evaluation_instruments import prep
 
-OUTPUT_MODE = "score_only"  # Default output mode
+OUTPUT_MODE = prep.OutputMode.SCORE  # Default output mode
 
 def pdsqi_from_file(sample: Any, output_mode: str = 'default') -> list[dict]:
     """
@@ -213,7 +214,7 @@ def pdsqi_from_file(sample: Any, output_mode: str = 'default') -> list[dict]:
 
     return resolve_prompt(summary, notes, target_specialty, output_mode)
 
-def resolve_prompt(summary_to_evaluate: str, notes: list[str], target_specialty: str, output_mode: prep.OutputMode|str = 'default') -> list[dict]:
+def resolve_prompt(summary_to_evaluate: str, notes: list[str], target_specialty: str, output_mode: prep.OutputMode = prep.OutputMode.DEFAULT) -> list[dict]:
     """
     Resolves the prompt for PDSQI-9 evaluation.
 
@@ -227,15 +228,18 @@ def resolve_prompt(summary_to_evaluate: str, notes: list[str], target_specialty:
         The target medical specialty
     output_mode : OutputMode|str, optional
         Controls the output format:
-        - DEFAULT("default"): Use the global RETURN_EXPLANATION setting
-        - SCORE_ONLY("score_only"): Return only numeric scores
-        - WITH_EXPLANATION("with_explanation"): Return scores with explanations
+        - DEFAULT: Use the global RETURN_EXPLANATION setting
+        - SCORE_ONLY: Return only numeric scores
+        - WITH_EXPLANATION: Return scores with explanations
 
     Returns
     -------
     list[dict]
         The message array to send to the generative model
     """
+    if output_mode != prep.OutputMode.DEFAULT:
+        logging.debug("Changing output mode from default deviates from the original published studies.")
+
     instructions = prep.resolve_instructions(
         instructions=INSTRUCTION_LIST,
         details_overrides=DETAIL_INSTRUCTIONS,
