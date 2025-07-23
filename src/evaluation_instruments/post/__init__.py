@@ -1,11 +1,10 @@
 import pandas as pd
 
-
 def frame_from_evals(full_output: dict) -> pd.DataFrame:
     """
     Convert the output of the evaluation into a DataFrame.
 
-    Handles direct, sinlgly valued rubric outputs as well as nested dictionaries of key-value
+    Handles direct, singly valued rubric outputs as well as nested dictionaries of key-value
     such as {score: int, explanation: str} pairs.
 
     Parameters
@@ -13,9 +12,6 @@ def frame_from_evals(full_output: dict) -> pd.DataFrame:
     full_output : dict
         The full output of the evaluation, typically a dictionary with keys as the primary keys and values as dictionaries
         containing the criteria and their respective outputs.
-    criteria_outputs : list[str], optional
-        The names of the outputs to include in the DataFrame. If not provided, defaults to ["evidence", "score"].
-        Specify [] or a single valued list to return a DataFrame with only one level, the criteria names.
 
     Returns
     -------
@@ -25,7 +21,9 @@ def frame_from_evals(full_output: dict) -> pd.DataFrame:
     if not full_output:
         return pd.DataFrame()
 
+    # Assume that first item is representative of the structure.
     output0 = next(iter(full_output.values()), None)
+
     if not isinstance(output0, dict):
         raise ValueError("The output must be a dictionary with index-oriented dictionary with column-value pairs")
     if (item := next(iter(output0.values()), None)):

@@ -239,8 +239,8 @@ def resolve_prompt(summary_to_evaluate: str, notes: list[str], target_specialty:
     instructions = prep.resolve_instructions(
         instructions=INSTRUCTION_LIST,
         details_overrides=DETAIL_INSTRUCTIONS,
-        mode=output_mode,
         default_mode=OUTPUT_MODE,
+        mode=output_mode,
     )
 
     prompt_notes = "\n".join(

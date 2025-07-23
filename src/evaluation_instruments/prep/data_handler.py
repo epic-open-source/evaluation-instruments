@@ -15,6 +15,7 @@ class OutputMode(Enum):
 
 
 def _resolve_mode(mode: OutputMode|str, default_mode: OutputMode|str = 'score_only') -> OutputMode:
+    """ Handles support for string|enum, looking first to mode substituting the default_mode for "default" """
     try: # make sure original value is supported
         output_mode = OutputMode(mode)
     except ValueError: # fallback to default
@@ -28,8 +29,35 @@ def _resolve_mode(mode: OutputMode|str, default_mode: OutputMode|str = 'score_on
 
 def resolve_instructions(instructions: list,
                          details_overrides: dict,
+                         default_mode: OutputMode|str,
                          mode: OutputMode|str = 'default',
-                         default_mode: OutputMode|str = 'score_only') -> str:
+                         ) -> str:
+    """
+    Resolves inputs into a single string of instructions.
+
+    The instruction list is used as a base, with an line-index:value dictionary being used to
+    override lines if the mode resolves to OutputMode.EXPLAINED_SCORE.
+
+    Parameters
+    ----------
+    instructions : list
+        An ordered list of instructions to use in the prompt.
+    details_overrides : dict
+        A dictionary mapping line indices to their detailed instruction overrides.
+    default_mode : OutputMode | str
+        The output mode to use if 'default' is specified, should be set by the instrument.
+    mode : OutputMode | str, optional
+        The output mode to use for resolving instructions, by default 'default'
+
+
+    Returns
+    -------
+    str
+        A single concatenated string of instructions, with overrides applied as specified.
+    """
+    if OutputMode(default_mode) == OutputMode.DEFAULT:
+        raise ValueError("default_mode must be set to a specific OutputMode, not 'default'")
+
     instructions = instructions.copy()
 
     if OutputMode.EXPLAINED_SCORE == _resolve_mode(mode, default_mode):

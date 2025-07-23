@@ -216,8 +216,9 @@ def resolve_prompt(sample, mode: str = 'default') -> str:
     instructions = prep.resolve_instructions(
                             instructions=INSTRUCTION_LIST,
                             details_overrides=DETAIL_INSTRUCTIONS,
-                            mode=mode,
-                            default_mode=OUTPUT_MODE)
+                            default_mode=OUTPUT_MODE,
+                            mode=mode
+                            )
 
     return prompt_pattern.format(clinical_data=compile_clinical_data(sample),
                                  output_to_evaluate=sample["basis"],
