@@ -296,6 +296,7 @@ Clincal Note:
 """
 
 from typing import List, Dict
+import evaluation_instruments as ev
 import logging
 import pandas as pd
 
@@ -419,7 +420,7 @@ def run_pipeline(input_df: pd.DataFrame, completion, log_enabled: bool = True, m
     for category, prompt_fxn in prompt_types.items():
         logger.info(f"--- Running evaluation for: {category} ---")
 
-        evaluator = Evaluation(
+        evaluator = ev.Evaluation(
             completion_fn=completion,
             prep_fn=prompt_fxn,
             log_enabled=log_enabled,
