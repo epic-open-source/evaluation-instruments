@@ -24,7 +24,7 @@ NYU Langone further explored the potential of large language models (LLMs), spec
 
 **Current Implementation:**
 
-GPT-4 Turbo is now used in production with validated results. Five separate prompts (one for each of the 5Cs categories) are employed to grade notes across all services within the institution. This AI-generated feedback, which undergoes physician review before distribution, helps providers understand specific areas for improvement in their actual notes, augmenting timely peer-to-peer review and enabling further scaling of NYU Langone's initiatives.
+GPT-4 Turbo is now used in production with validated results. Five separate prompts (one for each of the 5Cs categories) are employed to grade notes across all services within the institution. To enhance accuracy, each prompt utilizes few-shot prompting with two examples: one positive and one negative. These examples are provided in rich text format (RTF), which does not preserve the original formatting of the clinical note as it appears in the EHR. This means the RTF may contain symbols like "?" and "|" which may differ from the original symbols used in the clinical note. Each example includes a chain-of-thought explanation, detailing the reasoning behind the classification to guide the LLM's understanding.
 
 **Impact**
 This innovative approach allows NYU Langone Health to apply metric-driven quality improvement strategies to medical documentation at scale, leading to more accurate, accessible, and effective clinical notes. This, in turn, positively influences patient care, staff well-being, and clinical documentation integrity, ultimately enhancing the entire care delivery experience.
@@ -33,7 +33,7 @@ This innovative approach allows NYU Langone Health to apply metric-driven qualit
 
 ## How It Works
 
-The script constructs a system prompt and user prompt using the provided clinical notes, then evaluates each note against the full 5Cs rubric. Outputs are returned in JSON with classifications (1 (present) or 0 (absent)) for each of the 5C categories for each note.
+The script constructs a system prompt and user prompt using the provided clinical notes, then evaluates each note against the full 5Cs rubric. Outputs are returned in JSON with classifications (1 (present) or 0 (absent)) for each of the 5C categories for each note. 
 
 ---
 

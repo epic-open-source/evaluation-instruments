@@ -296,8 +296,11 @@ Clincal Note:
 """
 
 from typing import List, Dict
-import evaluation_instruments as ev
+import logging
 import pandas as pd
+
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger("evaluation")
 
 
 def create_complete_prompt(note: str) -> List[Dict]:
@@ -375,28 +378,30 @@ def create_correct_prompt(note: str) -> List[Dict]:
     return [{"role": "user", "content": prompt}]
 
 
-def run_pipeline(input_df: pd.DataFrame, completion) -> Dict:
+def run_pipeline(input_df: pd.DataFrame, completion, log_enabled: bool = True, max_tokens: int = 80_000) -> Dict:
     """
     Runs a pipeline of evaluations on an input DataFrame using various prompt types and a specified completion function.
 
     This function iterates through a predefined set of prompt categories (complete, clinical_assessment_reasoning,
     contingent, concise, correct), creates an `Evaluation` instance for each, and runs the input dataset through it.
     The results from each evaluation are aggregated into a single dictionary, where each note ID is associated with
-    a dictionary of its grades across all evaluation categories.  The `completion` function is used to generate
+    a dictionary of its grades across all evaluation categories. The `completion` function is used to generate
     responses from a language model based on the prompts created for each category.
 
     Args:
-        input_df (pd.DataFrame): The input dataset as a pandas DataFrame.  This DataFrame should contain a 'noteid'
+        - input_df (pd.DataFrame): The input dataset as a pandas DataFrame. This DataFrame should contain a 'noteid'
             column and any other columns required by the prompt creation functions (e.g., text to be evaluated).
             The 'noteid' column is used as the key in the output dictionary.
-        completion: A function that takes a model name and a list of messages as input and returns the completion
-            from the language model.  This function is responsible for interacting with the language model API.
+        - completion: A function that takes a model name and a list of messages as input and returns the completion
+            from the language model. This function is responsible for interacting with the language model API.
             In this case, it is expected to return a JSON string representing the completion.
+        - log_enabled (bool): Flag to enable or disable logging within the Evaluation instances.
+        - max_tokens (int): Maximum number of tokens to be used by the Evaluation instances.
 
     Returns:
         Dict: A dictionary where keys are 'noteid's (corresponding to the 'noteid' column in the input DataFrame)
-              and values are dictionaries containing the evaluation grades for each category.  For example:
-              `{'noteid1': {'complete': 1, 'clinical_reasoning': 0, ...}, 'noteid2': {...}}`.
+              and values are dictionaries containing the evaluation grades for each category. For example:
+              `{'noteid1': {'complete': 1, 'clinical_reasoning': , ...}, 'noteid2': {...}}`.
               Each inner dictionary contains the grades assigned to that note ID for each prompt category.
     """
     
@@ -412,13 +417,14 @@ def run_pipeline(input_df: pd.DataFrame, completion) -> Dict:
     }
 
     for category, prompt_fxn in prompt_types.items():
-        print(f"\n--- Running evaluation for: {category} ---")
+        logger.info(f"--- Running evaluation for: {category} ---")
 
-        evaluator = ev.Evaluation(
+        evaluator = Evaluation(
             completion_fn=completion,
             prep_fn=prompt_fxn,
-            log_enabled=True,
-            max_tokens=80_000,
+            log_enabled=log_enabled,
+            max_tokens=max_tokens,
+            log_prefix=category # Use the category as the log_prefix
         )
 
         # Assuming run_dataset returns a tuple of (output_dict, usage_info)
