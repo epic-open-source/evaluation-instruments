@@ -1,5 +1,5 @@
 ## Clinical Note Quality with AI-Powered Evaluation at NYU Langone Health
-NYU Langone Health, a prominent academic healthcare system, has tackled the critical issue of poor clinical note quality—a widespread concern since the Health Information Technology for Economic and Clinical Health Act. Recognizing that US notes are four times longer than those in other countries and often lead to unclear diagnoses and delayed treatments, NYU Langone spearheaded an initiative to improve documentation, aligning with its data-driven culture.
+NYU Langone Health has tackled the critical issue of poor clinical note quality—a widespread concern since the Health Information Technology for Economic and Clinical Health Act. Recognizing that US notes are four times longer than those in other countries and often lead to unclear diagnoses and delayed treatments, NYU Langone spearheaded an initiative to improve documentation, aligning with its data-driven culture.
 
 **The Challenge: Measuring Quality in Medical Documentation**
 Despite a strong emphasis on performance and accountability, NYU Langone faced the challenge of applying metric-driven quality improvement strategies to medical documentation, a domain not easily amenable to quantitative measurement. The COVID-19 pandemic further underscored the need for clear communication in provider notes, especially after internal data placed NYU Langone in the bottom quartile for note length, indicating unnecessarily bloated documentation.
@@ -15,12 +15,12 @@ Key initiatives included:
 
 - Piloting AI Note Quality Measurement: Physician leaders used the 5Cs rubric to label a training set of Internal Medicine progress notes. Multiple AI models were developed and trained for each of the 5Cs components, with a validation set used to select the best-performing models. These models were then piloted across all inpatient Internal Medicine progress notes within the health system. Unit directors were trained on an interactive dashboard visualizing AI-generated note grades over time.
 
-**Leveraging GPT-4 for Scalable Note Quality Evaluation and Feedback**
-NYU Langone further explored the potential of large language models (LLMs), specifically GPT-4, to enhance their note quality initiatives.
+**Leveraging Large Language Models (LLMs) for Scalable Note Quality Evaluation and Feedback**
+NYU Langone further explored the potential of large language models (LLMs), specifically GPT-4 Turbo, to enhance their note quality initiatives.
 
-- GPT-4 for 5Cs Classification: NYU Langone teams tested GPT-4 for classifying the 5Cs, aiming for a generalizable note quality evaluation without retraining for each specialty. Through extensive "prompt engineering," a single GPT-4 prompt was developed that exhibited performance comparable to NYU Langone's in-house, specialty-specific models across numerous specialties.
+- GPT-4 Turbo for 5Cs Classification: NYU Langone teams tested GPT-4 Turbo for classifying the 5Cs, aiming for a generalizable note quality evaluation without retraining for each specialty. Through extensive prompt engineering, a single prompt for each 5C category were developed that exhibited performance comparable to NYU Langone's in-house, specialty-specific models across numerous specialties.
 
-- Scaling Narrative Feedback with GPT-4: A significant advantage of AI implementation is its ability to identify low-performing notes and providers. Historically, resource limitations hindered detailed feedback. LLMs like GPT-4 offer a promising solution by generating AI-powered, note-specific narrative feedback. Using iterative prompt engineering and "few-shot learning," NYU Langone optimized GPT-4's response generation.
+- Scaling Narrative Feedback with GPT-4 Turbo: A significant advantage of AI implementation is its ability to identify low-performing notes and providers. Historically, resource limitations hindered detailed feedback. LLMs like GPT-4 Turbo offer a promising solution by generating AI-powered, note-specific narrative feedback. Using iterative prompt engineering and "few-shot learning," NYU Langone optimized GPT-4's Turbo response generation.
 
 **Current Implementation:**
 
