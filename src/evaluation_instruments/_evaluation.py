@@ -235,8 +235,7 @@ class Evaluation:
 
         try:
             raw_content = openai_json["choices"][ix]["message"]["content"]
-            # Assume no nesting {}
-            response = json.loads(raw_content[raw_content.find("{") : raw_content.find("}") + 1])  # noqa: E203
+            response = json.loads(raw_content[raw_content.find("{") : raw_content.rfind("}") + 1])  # noqa: E203
         except Exception:
             logger.info(f"Failed to parse {sample_ix} response content as JSON.")
             response = {}

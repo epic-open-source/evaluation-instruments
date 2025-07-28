@@ -3,8 +3,64 @@ import logging
 from functools import wraps
 from typing import Callable, Optional
 from pathlib import Path
+from enum import Enum
 
 logger = logging.getLogger("evaluation")
+
+class OutputMode(Enum):
+    """Defines the output mode for PDSQI-9 evaluation."""
+    DEFAULT = "default"  # Use the global RETURN_EXPLANATION setting
+    SCORE = "score_only"  # Return only numeric scores
+    EXPLAINED_SCORE = "with_explanation"  # Return scores with explanations
+
+
+def _resolve_mode(mode: OutputMode, default_mode: OutputMode = OutputMode.SCORE) -> OutputMode:
+    """ Substitutes the default_mode for "default" """
+    # resolve default
+    if mode == OutputMode.DEFAULT:
+        mode = default_mode
+
+    return mode
+
+def resolve_instructions(instructions: list,
+                         details_overrides: dict,
+                         default_mode: OutputMode,
+                         mode: OutputMode = OutputMode.DEFAULT
+                         ) -> str:
+    """
+    Resolves inputs into a single string of instructions.
+
+    The instruction list is used as a base, with an line-index:value dictionary being used to
+    override lines if the mode resolves to OutputMode.EXPLAINED_SCORE.
+
+    Parameters
+    ----------
+    instructions : list
+        An ordered list of instructions to use in the prompt.
+    details_overrides : dict
+        A dictionary mapping line indices to their detailed instruction overrides.
+    default_mode : OutputMode
+        The output mode to use if 'default' is specified, should be set by the instrument.
+    mode : OutputMode, optional
+        The output mode to use for resolving instructions, by default 'default'
+
+    Returns
+    -------
+    str
+        A single concatenated string of instructions, with overrides applied as specified.
+    """
+    # Validate inputs
+    if OutputMode.DEFAULT == OutputMode(default_mode):
+        raise ValueError("default_mode must be set to a specific OutputMode, not 'default'")
+
+    instructions = instructions.copy()
+
+    # Apply overrides if the mode is EXPLAINED_SCORE
+    if OutputMode.EXPLAINED_SCORE == _resolve_mode(mode, default_mode):
+        for ix, instr in details_overrides.items():
+            instructions[ix] = instr
+
+    return "\n".join([instr for instr in instructions if instr])
 
 
 def json_from_column(prompt_fn: Callable = None, namedtuple_key: str = None, data_path: Optional[str] = None):
