@@ -1,5 +1,5 @@
 ## Clinical Note Quality with AI-Powered Evaluation at NYU Langone Health
-NYU Langone Health has implemented a groundbreaking AI-powered system to evaluate and improve the quality of clinical notes. This initiative addresses the long-standing issue of poor and overly long documentation that can lead to delayed treatments and unclear diagnoses. By leveraging artificial intelligence, NYU Langone has transformed clinical note quality from a subjective, difficult-to-measure domain into a data-driven process.
+NYU Langone Health has implemented an AI-powered system to evaluate and improve the quality of clinical notes. This initiative addresses the long-standing issue of poor and overly long documentation that can lead to delayed treatments and unclear diagnoses. By leveraging artificial intelligence, NYU Langone has transformed clinical note quality from a subjective, difficult-to-measure domain into a data-driven process.
 
 
 **How the AI Grading Systems Works**
@@ -13,13 +13,19 @@ To scale this evaluation process, NYU Langone collaborated with its MCIT Departm
 
 Here's a closer look at the key components of this process:
 
-- Prompt Engineering and Few-Shot Learning: NYU Langone's teams used extensive prompt engineering to create five distinct prompts, one for each of the 5Cs. To achieve a high degree of accuracy and generalizability, each prompt utilizes few-shot learning by including two examples: one positive and one negative. These examples, provided in rich text format (RTF) along with a chain-of-thought explanation, teach the LLM the desired classification pattern and reasoning.
+- **Data Extraction and Processing:** The system evaluates clinical progress notes extracted directly from NYU Langone's database. These notes are formatted into rich text format (RTF) before being sent to the LLM. It is crucial to understand that this extraction process does not preserve the original formatting from the Electronic Health Record (EHR). As a result, changes to spacing, symbols, and formatting—such as question marks (?) or vertical bars (|)—are common. This process was developed and validated exclusively using progress notes and has not been tested on other types of clinical notes, such as discharge summaries or consultation notes.
 
-- Classification and Output: The system evaluates each note against the full 5Cs rubric. The output for each category is a binary classification: 1 if the quality standard is met ("yes") and 0 if it is not met ("no"). This structured data is then returned in JSON format, allowing for robust quality reporting and analysis.
+- **Prompt Engineering:** NYU Langone's teams used extensive prompt engineering to create five distinct prompts, one for each of the 5Cs. To achieve a high degree of accuracy and generalizability, each prompt utilizes few-shot learning by including two examples: one positive and one negative. These examples, provided with a chain-of-thought explanation, teach the LLM the desired classification pattern and reasoning.
 
-- AI-Powered Feedback: A significant advantage of this system is its ability to identify low-scoring notes and providers, and then generate specific, narrative feedback. This detailed, AI-powered feedback is something that was previously difficult to provide due to resource limitations.
+- **Classification and Output:** The system evaluates each note against the full 5Cs rubric. The output for each category is a binary classification: 1 if the quality standard is met ("yes") and 0 if it is not met ("no"). This structured data is then returned in JSON format, allowing for robust quality reporting and analysis.
 
-- Model and Compliance: The institution validated and utilized GPT-4 Turbo for its production model. It's crucial to note that as of July 2025, GPT-4 Turbo has been deprecated by OpenAI. However, the system's underlying technology relies on a private instance of GPT, which has been configured to be HIPAA compliant. This ensures that patient data is handled securely and in accordance with privacy regulations, a fundamental requirement for any healthcare application.
+- **AI-Powered Evaluation:** A significant advantage of this system is its ability to identify low-scoring notes and providers, and then generate specific, narrative feedback. This detailed, AI-powered feedback is something that was previously difficult to provide due to resource limitations.
+
+- **Model and Compliance:** The institution validated and utilized GPT-4 Turbo for its production model. It's crucial to note that as of July 2025, GPT-4 Turbo has been deprecated by OpenAI. However, the system's underlying technology relies on a private instance of GPT, which has been configured to be HIPAA compliant. This ensures that patient data is handled securely and in accordance with privacy regulations, a fundamental requirement for any healthcare application.
+
+---
+
+**Expected Input and Outputs**
 
 The system takes a pandas DataFrame as input, where each row represents a clinical note with the note text and its corresponding ID. It then constructs system and user prompts to evaluate each note against the 5Cs rubric, returning the classifications in a JSON output.
 
