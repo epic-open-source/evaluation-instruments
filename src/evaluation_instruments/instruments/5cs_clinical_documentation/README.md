@@ -16,9 +16,9 @@ Here's a closer look at the key components of this process:
 
 - **Classification and Output:** The system evaluates each note against the full 5Cs rubric. The output for each category is a binary classification: 1 if the quality standard is met ("yes") and 0 if it is not met ("no"). This structured data is then returned in JSON format, allowing for robust quality reporting and analysis.
 
-- **AI-Powered Evaluation:** A significant advantage of this system is its ability to identify low-scoring notes and providers, and then generate specific, narrative feedback. This detailed, AI-powered feedback is something that was previously difficult to provide due to resource limitations.
+- **AI-Powered Evaluation:** A significant advantage of this system is its ability to identify low-scoring notes and providers, and then generate specific, classifications per 5C category. This detailed, AI-powered evaluation is something that was previously difficult to provide due to resource limitations.
 
-- **Model and Compliance:** The institution validated and utilized GPT-4 Turbo for its production model. It's crucial to note that as of July 2025, GPT-4 Turbo has been deprecated by OpenAI. However, the system's underlying technology relies on a private instance of GPT, which has been configured to be HIPAA compliant. This ensures that patient data is handled securely and in accordance with privacy regulations, a fundamental requirement for any healthcare application.
+- **Model and Compliance:** The institution validated and utilized a HIPAA-compliant private instance of GPT-4 Turbo (gpt-4-turbo-2024-04-09) for its production model. It is important to note that as of June 2025, GPT-4 Turbo (gpt-4-turbo-2024-04-09) has been deprecated by OpenAI. Due to this deprecation, the institution is actively validating other large language models to ensure the continued performance and functionality of its note quality evaluation system.
 
 ---
 
@@ -30,7 +30,7 @@ The system takes a pandas DataFrame as input, where each row represents a clinic
 
 **Important Considerations for Other Institutions**
 
-While this AI-powered approach has proven highly effective for NYU Langone Health, it's important to note that performance may vary for other institutions. The system's prompts were specifically fine-tuned using NYU Langone’s data and were validated using GPT-4 Turbo. Therefore, any institution looking to implement a similar system should be aware that human validation is warranted and some fine-tuning may be required to achieve similar levels of accuracy and effectiveness.
+While this AI-powered approach has proven highly effective for NYU Langone Health, it's important to note that performance may vary for other institutions. The system's prompts were specifically fine-tuned and validated using NYU Langone’s data and its HIPAA-compliant private instance of GPT-4 Turbo (gpt-4-turbo-2024-04-09). The same prompts may be used with other models or different note types, but human validation is warranted, and further fine-tuning of the prompts may be required to achieve effective and accurate classifications. This is crucial to ensure that the system's performance translates reliably to different environments and use cases.
 
 ---
 
