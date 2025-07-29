@@ -164,6 +164,8 @@ A1:
 
 2. Appropriate articulation of the medical milestone(s) that needs to happen prior to discharge: This is seen in the note where it says, "If patient is afebrile overnight AND if WBC count is <12K, patient may be discharged home tomorrow DBN." This means that if the patient does not have a fever overnight and if their white blood cell count is less than 12,000, they may be discharged to go home the next day. This is a clear articulation of the medical milestones that need to be achieved before the patient can be discharged.
 
+Given that this note has at least one of the two elements of contingency planning, this note has contingency planning.
+
 ###
 
 EXAMPLE 2
@@ -178,7 +180,7 @@ There is no explicit "if/ then" statement in the note. The plan mentions follow-
 2. Appropriate articulation of the medical milestone(s) that needs to happen prior to discharge:
 The note does not specify any medical milestones or conditions that need to be met before the patient can be discharged. It focuses on the current treatment plan and follow-up actions but does not mention discharge criteria. For example, a statement like "if the patient's WBC count returns to normal and they remain afebrile for 24 hours, they may be discharged" would be an appropriate articulation of medical milestones prior to discharge, but such a statement is not present in the note.
 
-Given that this note has at least one of the two elements of contingency planning, this note has contingency planning. 
+Given that this note is missing at least one of the two elements of contingency planning, this note has no contingency planning. 
 
 ###
 
