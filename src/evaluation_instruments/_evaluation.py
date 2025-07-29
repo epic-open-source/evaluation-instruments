@@ -49,6 +49,9 @@ class Evaluation:
     max_tokens : _type_, optional
         a capacity limit for an individual dataset evaluation, by default 10_000
         will stop the evaluation loop after the first request exceeding this limit
+    log_prefix : Optional[str], optional
+        An optional prefix for the log directory within the temporary logging path, by default None.
+        Useful for organizing logs from different evaluation runs.
     """
 
     def __init__(
@@ -59,6 +62,7 @@ class Evaluation:
         log_enabled: bool = True,
         model_args: dict = {},
         max_tokens: int = 10_000,
+        log_prefix: Optional[str] = None,
     ):
         self.prep_fn = prep_fn
         self.completion_fn = completion_fn
@@ -66,6 +70,8 @@ class Evaluation:
 
         self.log_enabled = log_enabled
         self._model_args = model_args or {}
+        self._log_prefix = log_prefix
+        
 
         self.tmp_dir: Optional[Path] = None
         self.capacity: TokenUsage = TokenUsage(None, None, max_tokens)
@@ -180,7 +186,11 @@ class Evaluation:
         datestamp = datetime.now().strftime("%Y%m%d-%Hh")  # Generate a timestamp in the format YYYYMMDD-hhmm
 
         if self.tmp_dir is None:
-            tmp_dir = Path(tempfile.gettempdir()) / "evaluation_logs" / f"{datestamp}"
+            log_base_dir = Path(tempfile.gettempdir()) / "evaluation_logs"
+            if self._log_prefix:
+                tmp_dir = log_base_dir / f"{self._log_prefix}_{datestamp}"
+            else:
+                tmp_dir = log_base_dir / f"{datestamp}"
             tmp_dir.mkdir(parents=True, exist_ok=True)
             self.tmp_dir = tmp_dir
 
