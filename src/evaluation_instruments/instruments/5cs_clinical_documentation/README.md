@@ -6,7 +6,7 @@ NYU Langone Health has implemented an AI-powered system to evaluate and improve 
 
 NYU Langone's approach began with the development of the "5Cs" assessment tool: a practical rubric measuring note Completeness, Concisness, Contingency (Discharge) Planning, Correctness, and Clinical Assessment and Reasoning.
 
-To scale this evaluation process, NYU Langone collaborated with its MCIT Department of Health Informatics. The institution initially built its own models, but later successfully leveraged large language models (LLMs) to make the system more scalable across different specialties. The system uses a specific technique known as few-shot learning, which enables the model to adapt to new tasks with minimal examples, without the need for extensive retraining.
+To scale this evaluation process, NYU Langone collaborated with its MCIT Department of Health Informatics. The institution initially built its own models, but later successfully leveraged large language models (LLMs) to make the system more scalable across different specialties.
 
 Here's a closer look at the key components of this process:
 
