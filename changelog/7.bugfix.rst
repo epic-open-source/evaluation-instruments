@@ -1,3 +1,0 @@
-Update default postproccessing to handle the objects returned by more providers.
-Update the results transform to handle single score objects.
-Update decorator to use pathlib not os
