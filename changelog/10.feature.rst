@@ -1,2 +1,0 @@
-Establish pattern for interchangeable instruction sets, to allow score-only or score+explanation output formats.
-Update the explanation response to be a dictionary instead of list.

@@ -5,6 +5,24 @@ Breaking changes may occur between minor versions prior to the v1 release; after
 
 <!-- towncrier release notes start -->
 
+## 0.0.2
+
+### Features
+
+- Add 5cs evaluation instrument ([#11](https://github.com/epic-open-source/evaluation-instruments/issues/11))
+- Establish pattern for interchangeable instruction sets, to allow score-only or score+explanation output formats ([#10](https://github.com/epic-open-source/evaluation-instruments/issues/10))
+
+### Bugfixes
+
+- Update default postproccessing to handle the objects returned by more providers ([#7](https://github.com/epic-open-source/evaluation-instruments/issues/7))
+- Update the results transform to handle single score objects ([#7](https://github.com/epic-open-source/evaluation-instruments/issues/7))
+- Update decorator to use pathlib not os ([#7](https://github.com/epic-open-source/evaluation-instruments/issues/7))
+
+### Changes
+
+- Adding a ``MANIFEST.in`` to ensure the entire ``instruments/`` folder is included in pip-installed distributions ([#9](https://github.com/epic-open-source/evaluation-instruments/issues/9))
+- Update the explanation response to be a dictionary instead of list ([#10](https://github.com/epic-open-source/evaluation-instruments/issues/10))
+
 ## 0.0.1
 
 ### Features
