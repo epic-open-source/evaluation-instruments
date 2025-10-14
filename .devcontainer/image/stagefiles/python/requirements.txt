@@ -1,5 +1,5 @@
 #seismometer
 #litellm==1.65.4
 pandas==2.2.3
-jupyterlab==4.4.1
+jupyterlab==4.4.8
 pre-commit==4.2.0
