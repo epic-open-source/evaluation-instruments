@@ -1,0 +1,1 @@
+Allowed pandas 3 (``pandas>=2.2,<4``).
